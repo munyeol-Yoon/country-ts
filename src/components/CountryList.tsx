@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import api from "../api/api";
 import { Country } from "../types/Country.type";
 import CountrySection from "./CountrySection";
+import CountrySectionSkeleton from "./CountrySectionSkeleton";
 
 const CountryList: React.FC = () => {
   const [allCountries, setAllCountries] = useState<Country[]>([]);
@@ -53,7 +54,15 @@ const CountryList: React.FC = () => {
     }
   };
 
-  if (isLoading) return <div>loading</div>;
+  if (isLoading) {
+    // 데이터 로딩 중이면 스켈레톤 UI를 보여줍니다.
+    return (
+      <div className="container p-6 mx-auto">
+        {/* <CountrySectionSkeleton /> */}
+        <CountrySectionSkeleton />
+      </div>
+    );
+  }
   if (isError) return <div>error</div>;
 
   return (
