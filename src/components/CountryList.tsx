@@ -55,7 +55,6 @@ const CountryList: React.FC = () => {
   };
 
   if (isLoading) {
-    // 데이터 로딩 중이면 스켈레톤 UI를 보여줍니다.
     return (
       <div className="container p-6 mx-auto">
         {/* <CountrySectionSkeleton /> */}

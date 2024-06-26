@@ -1,5 +1,3 @@
-// CountrySectionSkeleton.tsx
-
 import React from "react";
 
 const CountrySectionSkeleton: React.FC = () => {
