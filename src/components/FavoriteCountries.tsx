@@ -4,6 +4,7 @@ function FavoriteCountries() {
       <h2 className="mt-12 text-2xl font-semibold text-center">
         Favorite Countries
       </h2>
+      {/* <CountryList /> */}
     </div>
   );
 }
