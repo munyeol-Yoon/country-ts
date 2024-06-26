@@ -57,15 +57,15 @@ const CountryList: React.FC = () => {
   if (isError) return <div>error</div>;
 
   return (
-    <div>
+    <div className="container p-6 mx-auto">
       <CountrySection
         countries={selectedCountries}
-        title="좋아하는 나라"
+        title="Favorite Countries"
         handleSelectCountry={handleSelectCountry}
       />
       <CountrySection
         countries={countries}
-        title="나라들"
+        title="Countries"
         handleSelectCountry={handleSelectCountry}
       />
     </div>
