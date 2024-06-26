@@ -1,32 +1,75 @@
+import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import api from "../api/api";
 import { Country } from "../types/Country.type";
+import CountrySection from "./CountrySection";
 
-interface Props {
-  countries: Country[];
-}
+const CountryList: React.FC = () => {
+  const [allCountries, setAllCountries] = useState<Country[]>([]);
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [selectedCountries, setSelectedCountries] = useState<Country[]>([]);
 
-function CountryList({ countries }: Props) {
-  console.log(countries);
+  const {
+    data: countriesData,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["countries"],
+    queryFn: () => api.countries.getCountries(),
+  });
 
-  if (!countries) return <div>Not Found</div>;
+  useEffect(() => {
+    if (countriesData) {
+      setAllCountries(countriesData);
+      setCountries(countriesData);
+    }
+  }, [countriesData]);
+
+  const handleSelectCountry = (country: Country): void => {
+    if (
+      !selectedCountries.find(
+        (selectedCountry) => selectedCountry.name.common === country.name.common
+      )
+    ) {
+      setSelectedCountries([...selectedCountries, country]);
+      setCountries(
+        countries.filter((c) => c.name.common !== country.name.common)
+      );
+    } else {
+      setSelectedCountries(
+        selectedCountries.filter(
+          (selectedCountry) =>
+            selectedCountry.name.common !== country.name.common
+        )
+      );
+      setCountries(
+        [...countries, country].sort((a, b) => {
+          return (
+            allCountries.findIndex((c) => c.name.common === a.name.common) -
+            allCountries.findIndex((c) => c.name.common === b.name.common)
+          );
+        })
+      );
+    }
+  };
+
+  if (isLoading) return <div>loading</div>;
+  if (isError) return <div>error</div>;
 
   return (
-    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-      {countries.map((country, index) => (
-        <li
-          key={index}
-          className="p-4 transition-transform transform bg-white rounded-lg shadow-md hover:shadow-lg"
-        >
-          <img
-            src={country.flags.png}
-            alt={country.name.common}
-            className="w-20 h-auto mx-auto mb-4"
-          />
-          <h2 className="mb-2 text-xl font-semibold">{country.name.common}</h2>
-          <p className="text-gray-600">{country.capital}</p>
-        </li>
-      ))}
-    </ul>
+    <div>
+      <CountrySection
+        countries={selectedCountries}
+        title="좋아하는 나라"
+        handleSelectCountry={handleSelectCountry}
+      />
+      <CountrySection
+        countries={countries}
+        title="나라들"
+        handleSelectCountry={handleSelectCountry}
+      />
+    </div>
   );
-}
+};
 
 export default CountryList;
